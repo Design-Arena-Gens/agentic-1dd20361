@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Essentia Luxe</title>
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --text-primary: #ffffff;
+      --text-muted: #c0c0c0;
+      --text-soft: #888888;
+      --glass-light: rgba(255, 255, 255, 0.06);
+      --glass-heavy: rgba(255, 255, 255, 0.15);
+      --border-soft: rgba(255, 255, 255, 0.08);
+      --accent: linear-gradient(125deg, rgba(255,255,255,0.35), rgba(255,255,255,0.05));
+      --glow: 0 35px 60px rgba(255, 255, 255, 0.08);
+      --transition: all 420ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: "Poppins", "Montserrat", "Playfair Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      position: relative;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: min(580px, 60vw);
+      height: min(580px, 60vw);
+      filter: blur(120px);
+      opacity: 0.45;
+      mix-blend-mode: screen;
+      z-index: -2;
+    }
+
+    body::before {
+      top: -120px;
+      left: -160px;
+      background: radial-gradient(circle, rgba(192, 192, 192, 0.48), transparent 65%);
+    }
+
+    body::after {
+      bottom: -120px;
+      right: -160px;
+      background: radial-gradient(circle, rgba(136, 136, 136, 0.42), transparent 65%);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(0, 0, 0, 0.65);
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px clamp(24px, 5vw, 48px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: 0.32em;
+      font-size: 14px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .brand::before {
+      content: "";
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.45), rgba(255,255,255,0.03));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: clamp(16px, 2vw, 32px);
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      letter-spacing: 0.12em;
+      transition: var(--transition);
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+      width: 100%;
+      height: 1px;
+      background: rgba(255,255,255,0.4);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 320ms ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus {
+      color: var(--text-primary);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a:focus::after {
+      transform: scaleX(1);
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 140px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: clamp(48px, 10vw, 120px) clamp(24px, 5vw, 48px) 160px;
+    }
+
+    section {
+      position: relative;
+    }
+
+    .hero {
+      min-height: clamp(480px, 70vh, 720px);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: clamp(32px, 5vw, 64px);
+      align-items: center;
+    }
+
+    .hero-details {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .hero-details span {
+      letter-spacing: 0.28em;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    h1 {
+      font-size: clamp(40px, 6vw, 68px);
+      letter-spacing: -0.02em;
+      font-weight: 500;
+      line-height: 1.08;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 480px;
+      font-size: 17px;
+    }
+
+    .cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: var(--accent);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: inset 0 1px rgba(255,255,255,0.2);
+    }
+
+    .btn:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--glow);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-secondary:hover {
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .hero-showcase {
+      position: relative;
+      padding: clamp(32px, 5vw, 48px);
+      border-radius: 36px;
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.05), rgba(0,0,0,0.8));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: var(--glow);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero-showcase::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background: rgba(255,255,255,0.012);
+      border: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(24px);
+      z-index: -1;
+    }
+
+    .hero-showcase .orb {
+      position: absolute;
+      inset: 18%;
+      filter: blur(60px);
+      background: linear-gradient(140deg, rgba(255,255,255,0.35), rgba(255,255,255,0.05));
+      opacity: 0.6;
+      transform: rotate(8deg);
+      mix-blend-mode: screen;
+    }
+
+    .hero-showcase .device {
+      position: relative;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 42px;
+      background: rgba(0, 0, 0, 0.82);
+      box-shadow: inset 0 1px rgba(255,255,255,0.12), 0 45px 80px rgba(0, 0, 0, 0.6);
+    }
+
+    .device::before,
+    .device::after {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .device::before {
+      inset-inline-start: 22px;
+      inset-inline-end: 22px;
+      border-radius: 18px;
+      border-color: rgba(255,255,255,0.06);
+    }
+
+    .device::after {
+      inset-inline-start: 32px;
+      inset-inline-end: 32px;
+      inset-block-start: 48px;
+      inset-block-end: 48px;
+      border-radius: 16px;
+      border-color: rgba(255,255,255,0.03);
+    }
+
+    .device-screen {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      border-radius: 18px;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.38), rgba(0,0,0,0.82));
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      color: #000;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      gap: 12px;
+      font-size: clamp(18px, 2vw, 24px);
+      text-align: center;
+    }
+
+    .device-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.42), rgba(255,255,255,0.08));
+      mix-blend-mode: screen;
+      opacity: 0.75;
+    }
+
+    .device-screen span {
+      position: relative;
+      z-index: 1;
+      color: #0a0a0a;
+    }
+
+    .device-screen small {
+      position: relative;
+      z-index: 1;
+      letter-spacing: 0.24em;
+      font-size: 11px;
+      color: rgba(0,0,0,0.65);
+    }
+
+    .badge {
+      position: absolute;
+      inset: auto auto 28px 28px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text-muted);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 11px;
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(14px);
+    }
+
+    .section-heading {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 48px;
+    }
+
+    .section-heading span {
+      text-transform: uppercase;
+      letter-spacing: 0.32em;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .section-heading h2 {
+      font-size: clamp(32px, 4.8vw, 48px);
+      font-weight: 500;
+      letter-spacing: -0.015em;
+    }
+
+    .section-heading p {
+      max-width: 560px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: clamp(24px, 4vw, 36px);
+    }
+
+    .feature-card {
+      position: relative;
+      padding: clamp(28px, 3vw, 36px);
+      border-radius: 28px;
+      border: 1px solid var(--border-soft);
+      background: var(--glass-light);
+      backdrop-filter: blur(18px);
+      transition: var(--transition);
+      overflow: hidden;
+      min-height: 240px;
+    }
+
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      inset: -40% -30% auto -40%;
+      height: 120%;
+      background: linear-gradient(125deg, rgba(255,255,255,0.18), transparent);
+      transform: rotate(12deg);
+      opacity: 0;
+      transition: opacity 420ms ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      border-color: rgba(255,255,255,0.22);
+      box-shadow: var(--glow);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.18);
+      display: grid;
+      place-items: center;
+      margin-bottom: 24px;
+      background: rgba(255,255,255,0.05);
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .feature-card h3 {
+      font-size: 20px;
+      margin-bottom: 14px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: clamp(18px, 3vw, 28px);
+      position: relative;
+    }
+
+    .gallery-card {
+      position: relative;
+      border-radius: 32px;
+      padding: 28px;
+      min-height: clamp(260px, 35vw, 380px);
+      border: 1px solid rgba(255,255,255,0.1);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.08), rgba(0,0,0,0.9));
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      transition: var(--transition);
+    }
+
+    .gallery-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.65));
+      z-index: 1;
+    }
+
+    .gallery-card .label {
+      position: relative;
+      z-index: 2;
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .gallery-card h3 {
+      position: relative;
+      z-index: 2;
+      margin-top: 12px;
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .gallery-card:hover {
+      transform: translateY(-12px);
+      box-shadow: var(--glow);
+      border-color: rgba(255,255,255,0.22);
+    }
+
+    .gallery-card:nth-child(1) {
+      background-image: linear-gradient(140deg, rgba(255,255,255,0.22), rgba(0,0,0,0.8));
+    }
+
+    .gallery-card:nth-child(2) {
+      background-image: linear-gradient(140deg, rgba(255,255,255,0.12), rgba(0,0,0,0.86));
+    }
+
+    .gallery-card:nth-child(3) {
+      background-image: linear-gradient(140deg, rgba(192,192,192,0.18), rgba(0,0,0,0.75));
+    }
+
+    .gallery-card:nth-child(4) {
+      background-image: linear-gradient(140deg, rgba(255,255,255,0.16), rgba(0,0,0,0.82));
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: clamp(24px, 4vw, 40px);
+      align-items: start;
+    }
+
+    .detail-card {
+      border-radius: 30px;
+      border: 1px solid var(--border-soft);
+      padding: clamp(32px, 3.5vw, 42px);
+      background: radial-gradient(circle at top right, rgba(255,255,255,0.08), rgba(0,0,0,0.9));
+      backdrop-filter: blur(18px);
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .detail-card h3 {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .detail-card p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    .detail-card strong {
+      font-size: clamp(24px, 3.6vw, 32px);
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+
+    .signature {
+      font-family: "Playfair Display", "Poppins", serif;
+      font-size: 28px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .testimonial-section {
+      position: relative;
+      padding: clamp(38px, 4.5vw, 52px);
+      border-radius: 36px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(0,0,0,0.92));
+      overflow: hidden;
+    }
+
+    .testimonial-section::before {
+      content: "";
+      position: absolute;
+      inset: -40% 10% auto -25%;
+      height: 130%;
+      background: linear-gradient(125deg, rgba(255,255,255,0.22), transparent);
+      opacity: 0.35;
+      transform: rotate(12deg);
+      filter: blur(6px);
+    }
+
+    .testimonial-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .testimonial-indicator {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 12px;
+    }
+
+    .testimonial-indicator span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.45);
+    }
+
+    .testimonial-carousel {
+      display: grid;
+      grid-auto-flow: column;
+      gap: clamp(24px, 4vw, 36px);
+      transition: transform 680ms cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .testimonial-card {
+      min-width: min(320px, 84vw);
+      border-radius: 30px;
+      padding: clamp(28px, 3vw, 36px);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(18px);
+      box-shadow: inset 0 1px rgba(255,255,255,0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .testimonial-card p {
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .testimonial-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-soft);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .star {
+      font-size: 16px;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .cta {
+      position: relative;
+      border-radius: 40px;
+      padding: clamp(48px, 6vw, 72px);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(120deg, rgba(255,255,255,0.18), rgba(0,0,0,0.85));
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: "";
+      position: absolute;
+      inset: -60% auto auto -20%;
+      width: clamp(380px, 60vw, 520px);
+      height: clamp(380px, 60vw, 520px);
+      background: radial-gradient(circle, rgba(255,255,255,0.45), transparent 65%);
+      opacity: 0.32;
+      filter: blur(18px);
+    }
+
+    .cta h3 {
+      font-size: clamp(34px, 4.6vw, 48px);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      max-width: 640px;
+      margin-bottom: 24px;
+    }
+
+    .cta p {
+      color: rgba(0,0,0,0.65);
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+      font-size: 12px;
+      margin-bottom: 32px;
+    }
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 48px clamp(24px, 5vw, 48px);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: center;
+      color: var(--text-soft);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    footer .divider {
+      width: 72px;
+      height: 1px;
+      background: rgba(255,255,255,0.14);
+    }
+
+    @media (max-width: 840px) {
+      .nav-links {
+        display: none;
+      }
+
+      .testimonial-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      main {
+        gap: 110px;
+      }
+
+      .hero {
+        gap: 42px;
+      }
+
+      .hero-showcase {
+        border-radius: 32px;
+      }
+
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (hover: none) {
+      .feature-card:hover,
+      .gallery-card:hover,
+      .btn:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav">
+      <div class="brand">Essentia Luxe</div>
+      <div class="nav-links">
+        <a href="#vision">Visión</a>
+        <a href="#experiencia">Experiencia</a>
+        <a href="#coleccion">Colección</a>
+        <a href="#opiniones">Testimonios</a>
+        <a href="#contacto">Contacto</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="vision">
+      <div class="hero-details">
+        <span>Signature Collection 2024</span>
+        <h1>Sensaciones que definen la nueva era del lujo.</h1>
+        <p>Una experiencia sensorial diseñada para quienes valoran la excelencia. Materiales icónicos, acabados metálicos y una presencia inolvidable en cada detalle.</p>
+        <div class="cta-group">
+          <button class="btn">Descubrir ahora</button>
+          <button class="btn btn-secondary">Solicitar acceso</button>
+        </div>
+      </div>
+      <div class="hero-showcase">
+        <div class="orb"></div>
+        <div class="device">
+          <div class="device-screen">
+            <span>Crafted Elegance</span>
+            <small>Est. 2030</small>
+          </div>
+          <div class="badge">Edición Limitada • 88 piezas</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="experiencia">
+      <div class="section-heading">
+        <span>Experiencia esencial</span>
+        <h2>Precisionismo, minimalismo y sofisticación absoluta.</h2>
+        <p>Inspirados en la sinfonía de marcas legendarias, nuestra visión combina tecnología avanzada con artesanía magistral para crear momentos memorables en cualquier entorno.</p>
+      </div>
+      <div class="features-grid">
+        <article class="feature-card">
+          <div class="feature-icon">∞</div>
+          <h3>Pulso Atemporal</h3>
+          <p>Diseño perpetuo con texturas sutiles y un lenguaje visual impecable, listo para refractar la luz con elegancia.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon">◆</div>
+          <h3>Materiales Nobles</h3>
+          <p>Aleaciones metálicas y fibras inteligentes culminan en superficies que evocan el lujo contemporáneo.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon">✧</div>
+          <h3>Experiencia Sensorial</h3>
+          <p>Transiciones fluidas, efectos glassmorphism y una narrativa visual que despierta conexiones emocionales.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon">◦</div>
+          <h3>Límites Redefinidos</h3>
+          <p>Todo está pensado para un impacto premium en cualquier dispositivo, conservando la pureza del diseño.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="coleccion">
+      <div class="section-heading">
+        <span>Legacy Collection</span>
+        <h2>Un universo de piezas icónicas.</h2>
+        <p>Cada elemento es curado con precisión quirúrgica, integrando patrones metálicos y reflejos controlados que elevan la percepción de exclusividad.</p>
+      </div>
+      <div class="gallery">
+        <div class="gallery-card">
+          <div class="label">Serie Nebula</div>
+          <h3>Reflejos que fluyen con la sutileza de la luz matinal.</h3>
+        </div>
+        <div class="gallery-card">
+          <div class="label">Serie Meridian</div>
+          <h3>Geometrías envolventes con acabados en grafito líquido.</h3>
+        </div>
+        <div class="gallery-card">
+          <div class="label">Serie Zenith</div>
+          <h3>Contrastes puros que proyectan presencia y poder.</h3>
+        </div>
+        <div class="gallery-card">
+          <div class="label">Serie Nova</div>
+          <h3>Composiciones minimalistas con aura estelar.</h3>
+        </div>
+      </div>
+    </section>
+
+    <section id="detalles">
+      <div class="detail-row">
+        <div class="detail-card">
+          <h3>Acabados</h3>
+          <strong>Metal líquido pulido a mano.</strong>
+          <p>Cada superficie recibe tratamientos múltiples para lograr una textura iridiscente que responde con precisión a los reflejos ambientales.</p>
+        </div>
+        <div class="detail-card">
+          <h3>Simbología</h3>
+          <strong>La firma de una nueva era.</strong>
+          <p>El monograma Essentia encapsula la dualidad entre serenidad y dinamismo, proyectando un legado atemporal.</p>
+        </div>
+        <div class="detail-card">
+          <h3>Experiencia</h3>
+          <strong>Una narrativa sensorial inigualable.</strong>
+          <p>Luces, sombras y profundidad trabajadas con una ingeniería que se siente tanto como se ve.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonial-section" id="opiniones">
+      <div class="testimonial-header">
+        <div>
+          <span class="section-heading span">Testimonios</span>
+          <h2>Historias que avalan la distinción.</h2>
+        </div>
+        <div class="testimonial-indicator">
+          <span></span>
+          Opiniones Reales
+        </div>
+      </div>
+      <div class="testimonial-carousel" id="testimonialCarousel">
+        <article class="testimonial-card">
+          <p>"Una obra maestra visual. La atención al detalle nos recuerda por qué el lujo se trata de emocionar, no solo impresionar."</p>
+          <div class="testimonial-meta">
+            <span>Lucía M. — Art Curator</span>
+            <span class="star">★★★★★</span>
+          </div>
+        </article>
+        <article class="testimonial-card">
+          <p>"Cada transición transmite serenidad absoluta. Dominaron la estética minimalista con un toque futurista sublime."</p>
+          <div class="testimonial-meta">
+            <span>Renato V. — Creative Director</span>
+            <span class="star">★★★★★</span>
+          </div>
+        </article>
+        <article class="testimonial-card">
+          <p>"Un despliegue impecable de diseño y tecnología. Es la referencia que uso para inspirar experiencias premium."</p>
+          <div class="testimonial-meta">
+            <span>Elena S. — Brand Strategist</span>
+            <span class="star">★★★★★</span>
+          </div>
+        </article>
+        <article class="testimonial-card">
+          <p>"Combina una precisión quirúrgica con una calidez muy sutil. Un balance casi imposible de lograr."</p>
+          <div class="testimonial-meta">
+            <span>César G. — Luxury Architect</span>
+            <span class="star">★★★★★</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta" id="contacto">
+      <h3>Selección privada para quienes definen el futuro del lujo.</h3>
+      <p>Agenda exclusiva para miembros fundadores</p>
+      <div class="cta-group">
+        <button class="btn">Solicitar invitación</button>
+        <button class="btn btn-secondary">Descargar manifiesto</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="brand">Essentia Luxe</div>
+    <div class="divider"></div>
+    <div>Manifestando el lujo del mañana</div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.2
+    });
+
+    document.querySelectorAll("section").forEach(section => {
+      section.style.opacity = 0;
+      section.style.transform = "translateY(60px)";
+      observer.observe(section);
+    });
+
+    const animateIn = () => {
+      document.querySelectorAll("section.visible").forEach(section => {
+        section.style.transition = "opacity 1s ease, transform 1s ease";
+        section.style.opacity = 1;
+        section.style.transform = "translateY(0)";
+      });
+    };
+
+    const carousel = document.getElementById("testimonialCarousel");
+    let activeIndex = 0;
+    const rotateTestimonials = () => {
+      const cards = carousel.children;
+      activeIndex = (activeIndex + 1) % cards.length;
+      const offset = cards[0].offsetWidth + parseFloat(getComputedStyle(carousel).gap || 0);
+      carousel.style.transform = `translateX(${-offset * activeIndex}px)`;
+    };
+
+    let carouselTimer = setInterval(rotateTestimonials, 4600);
+
+    carousel.addEventListener("mouseenter", () => clearInterval(carouselTimer));
+    carousel.addEventListener("mouseleave", () => {
+      carouselTimer = setInterval(rotateTestimonials, 4600);
+    });
+
+    window.addEventListener("resize", () => {
+      carousel.style.transition = "none";
+      carousel.style.transform = `translateX(${-activeIndex * (carousel.children[0].offsetWidth + parseFloat(getComputedStyle(carousel).gap || 0))}px)`;
+      requestAnimationFrame(() => {
+        carousel.style.transition = "";
+      });
+    });
+
+    window.addEventListener("load", animateIn);
+  </script>
+</body>
+</html>
